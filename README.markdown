@@ -49,7 +49,7 @@ So, you're running this locally, and you don't care about clobbering base
 classes? Lucky you! Here's how you can extend the base Date class for a nicer
 syntax:
 
-    <script src="date.js"></script>
+    <script src="jdate.js"></script>
     <script>
       jdate.extend_date();
 
@@ -65,60 +65,61 @@ syntax:
 ## Formats ##
 I've tried to make my parsing and formatting methods as compatible as possible
 with ruby's strftime and strptime. Docs available here:
-Time#strftime: http://www.ruby-doc.org/core/classes/Time.html#M000392
+http://www.ruby-doc.org/core/classes/Time.html
 
 Because of javascript's lacklustre support for timezones, and my desire to keep
 this library small, not all formatters and parsers are supported. Explanation
 for unimplemented formats are below.
 
-✓ - Implemented
-x - Not implemented
-? - work in progress
+    ✓ - Implemented
+    x - Not implemented
+    ? - work in progress
 
-Formatter, Parser, Shortcut - Description (Example)
-✓, ✓  %a - The abbreviated weekday name (``Sun'')
-✓, ✓  %A - The  full  weekday  name (``Sunday'')
-✓, ✓  %b - The abbreviated month name (``Jan'')
-✓, ✓  %B - The  full  month  name (``January'')
-✓, x  %c - The preferred local date and time representation
-✓, ✓  %C - Century (20 in 2009)
-✓, ✓  %d - Day of the month (01..31)
-✓, x  %D - Date (%m/%d/%y)
-✓, ✓  %e - Day of the month, blank-padded ( 1..31)
-✓, x  %F - Equivalent to %Y-%m-%d (the ISO 8601 date format)
-✓, ✓  %h - Equivalent to %b
-✓, ✓  %H - Hour of the day, 24-hour clock (00..23)
-✓, ✓  %I - Hour of the day, 12-hour clock (01..12)
-✓, ✓  %j - Day of the year (001..366)
-✓, ✓  %k - hour, 24-hour clock, blank-padded ( 0..23)
-✓, ✓  %l - hour, 12-hour clock, blank-padded ( 0..12)
-✓, ✓  %L - Millisecond of the second (000..999)
-✓, ✓  %m - Month of the year (01..12)
-✓, ✓  %M - Minute of the hour (00..59)
-x, x  %n - Newline (\n)
-x, x  %N - Fractional seconds digits, default is 9 digits (nanosecond)
-✓, ✓  %p - Meridian indicator (``AM''  or  ``PM'')
-✓, ✓  %P - Meridian indicator (``am''  or  ``pm'')
-✓, ✓  %q - (NONSTANDARD) Suffix for day of the month. st for 1, nd for 2, etc.
-✓, ?  %r - time, 12-hour (same as %I:%M:%S %p)
-✓, ?  %R - time, 24-hour (%H:%M)
-✓, x  %s - Number of seconds since 1970-01-01 00:00:00 UTC.
-✓, ✓  %S - Second of the minute (00..60)
-x, x  %t - Tab character (\t)
-✓, x  %T - time, 24-hour (%H:%M:%S)
-✓, ?  %u - Day of the week as a decimal, Monday being 1. (1..7)
-✓, ?  %U - Week  number of the current year, starting with the first Sunday as the first day of the first week (00..53)
-✓, x  %v - VMS date (%e-%b-%Y)
-x, x  %V - Week number of year according to ISO 8601 (01..53)
-✓, ?  %w - Day of the week (Sunday is 0, 0..6)
-✓, ?  %W - Week number  of the current year, starting with the first Monday as the first day of the first week (00..53)
-✓, x  %x - Preferred representation for the date alone, no time
-✓, x  %X - Preferred representation for the time alone, no date
-✓, ✓  %y - Year without a century (00..99)
-✓, ✓  %Y - Year with century
-✓, ✓  %z - Time zone as  hour offset from UTC (e.g. +0900)
-x, x  %Z - Time zone name
-✓, ✓  %% - Literal ``%'' character
+    Formatter, Parser, Shortcut - Description (Example)
+    ✓, ✓  %a - The abbreviated weekday name (Sun)
+    ✓, ✓  %A - The  full  weekday  name (Sunday)
+    ✓, ✓  %b - The abbreviated month name (Jan)
+    ✓, ✓  %B - The  full  month  name (January)
+    ✓, x  %c - The preferred local date and time representation
+    ✓, ✓  %C - Century (20 in 2009)
+    ✓, ✓  %d - Day of the month (01..31)
+    ✓, x  %D - Date (%m/%d/%y)
+    ✓, ✓  %e - Day of the month, blank-padded ( 1..31)
+    ✓, x  %F - Equivalent to %Y-%m-%d (the ISO 8601 date format)
+    ✓, ✓  %h - Equivalent to %b
+    ✓, ✓  %H - Hour of the day, 24-hour clock (00..23)
+    ✓, ✓  %I - Hour of the day, 12-hour clock (01..12)
+    ✓, ✓  %j - Day of the year (001..366)
+    ✓, ✓  %k - hour, 24-hour clock, blank-padded ( 0..23)
+    ✓, ✓  %l - hour, 12-hour clock, blank-padded ( 0..12)
+    ✓, ✓  %L - Millisecond of the second (000..999)
+    ✓, ✓  %m - Month of the year (01..12)
+    ✓, ✓  %M - Minute of the hour (00..59)
+    x, x  %n - Newline (\n)
+    x, x  %N - Fractional seconds digits, default is 9 digits (nanosecond)
+    ✓, ✓  %p - Meridian indicator (AM / PM)
+    ✓, ✓  %P - Meridian indicator (am / pm)
+    ✓, ✓  %q - (NONSTANDARD) Suffix for day of the month (st for 1, nd for 2, etc.)
+    ✓, ?  %r - time, 12-hour (same as %I:%M:%S %p)
+    ✓, ?  %R - time, 24-hour (%H:%M)
+    ✓, x  %s - Number of seconds since 1970-01-01 00:00:00 UTC.
+    ✓, ✓  %S - Second of the minute (00..60)
+    x, x  %t - Tab character (\t)
+    ✓, x  %T - time, 24-hour (%H:%M:%S)
+    ✓, ?  %u - Day of the week as a decimal, Monday being 1. (1..7)
+    ✓, ?  %U - Week  number of the current year, starting with the first Sunday as the first day of the first week (00..53)
+    ✓, x  %v - VMS date (%e-%b-%Y)
+    x, x  %V - Week number of year according to ISO 8601 (01..53)
+    ✓, ?  %w - Day of the week (Sunday is 0, 0..6)
+    ✓, ?  %W - Week number  of the current year, starting with the first Monday as the first day of the first week (00..53)
+    ✓, x  %x - Preferred representation for the date alone, no time
+    ✓, x  %X - Preferred representation for the time alone, no date
+    ✓, ✓  %y - Year without a century (00..99)
+    ✓, ✓  %Y - Year with century
+    ✓, ✓  %z - Time zone as  hour offset from UTC (e.g. +0900)
+    x, x  %Z - Time zone name
+    ✓, ✓  %% - Literal % character
+
 
 ### Omissions ###
 %n, %t - You can just use the \n and \t literals.
