@@ -1,37 +1,37 @@
 var jdate = {};
 
 (function(jdate) {
-  jdate.monthNames = [
+  var monthNames = [
     "January", "February", "March", "April", "May", "June", "July", "August",
     "September", "October", "November", "December"
   ];
-  jdate.monthNamesShort = [
+  var monthNamesShort = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
     "Nov", "Dec"
   ];
-  jdate.dayNames = [
+  var dayNames = [
     "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
   ];
-  jdate.dayNamesShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  jdate.suffixes = { 1: 'st', 2: 'nd', 3: 'rd', 'default': 'th' };
-
-  jdate.daysInMonth = function(d) {
-    var feb = this._date.isLeapYear(d) ? 29 : 28;
-    return [31, feb ,31,30,31,30,31,31,30,31,30,31];
-  };
+  var dayNamesShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  var suffixes = { 1: 'st', 2: 'nd', 3: 'rd', 'default': 'th' };
 
   // Apply all the date prototype extensions to allow them to be called on
   // instances of date.
   jdate.extend_date = function() {
     Date.strptime = jdate.strptime;
     Date.prototype.strftime = function(format) {
-      return jdate._date.strftime(this, format);
+      return jdate.strftime(this, format);
     };
   }
 
 
   // prototype extensions
-  jdate._date = {
+  var _date = {
+    daysInMonth: function(d) {
+      var feb = _date.isLeapYear(d) ? 29 : 28;
+      return [31, feb ,31,30,31,30,31,31,30,31,30,31];
+    },
+
     getTimezone: function(d) {
       return d.toString().replace(
         /^.*? ([A-Z]{3}) [0-9]{4}.*$/, "$1"
@@ -42,14 +42,14 @@ var jdate = {};
 
     getGMTOffset: function(d) {
       return (d.getTimezoneOffset() > 0 ? "-" : "+") +
-        jdate._number.pad(Math.floor(d.getTimezoneOffset() / 60), 2) +
-        jdate._number.pad(d.getTimezoneOffset() % 60, 2);
+        _number.pad(Math.floor(d.getTimezoneOffset() / 60), 2) +
+        _number.pad(d.getTimezoneOffset() % 60, 2);
     },
 
     getDayOfYear: function(d) {
       var num = 0;
       for (var i = 0; i < d.getMonth(); ++i) {
-        num += jdate.daysInMonth(d)[i];
+        num += _date.daysInMonth(d)[i];
       }
       return num + d.getDate();
     },
@@ -62,7 +62,7 @@ var jdate = {};
       // Find the first startDay of the year
       var jan1 = new Date(d.getFullYear(), 0, 1);
       var then = (7 - jan1.getDay() + startDay);
-      return jdate._number.pad(Math.floor((now - then) / 7) + 1, 2);
+      return _number.pad(Math.floor((now - then) / 7) + 1, 2);
     },
 
     isLeapYear: function(d) {
@@ -76,14 +76,14 @@ var jdate = {};
     },
 
     getLastDayOfMonth: function(d) {
-      var day = (d.getDay() + (jdate.daysInMonth(d)[d.getMonth()] - d.getDate())) % 7;
+      var day = (d.getDay() + (_date.daysInMonth(d)[d.getMonth()] - d.getDate())) % 7;
       return (day < 0) ? (day + 7) : day;
     },
 
     getSuffix: function(d) {
       var str = d.getDate().toString();
       var index = parseInt(str.slice(-1));
-      return jdate.suffixes[index] || jdate.suffixes['default'];
+      return suffixes[index] || suffixes['default'];
     },
 
 
@@ -98,7 +98,7 @@ var jdate = {};
     }
   };
 
-  jdate._obj = {
+  var _obj = {
     values_of: function(obj) {
       var values = [];
       // map doesn't work with objects
@@ -107,7 +107,7 @@ var jdate = {};
     }
   };
 
-  jdate._number = {
+  var _number = {
     pad: function (value, size, ch) {
       if (!ch) ch = '0';
       var result = value.toString();
@@ -120,31 +120,31 @@ var jdate = {};
   }
 
   var format_codes = {
-    a: function(d) { return jdate.dayNamesShort[d.getDay()]; },
-    A: function(d) { return jdate.dayNames[d.getDay()]; },
-    b: function(d) { return jdate.monthNamesShort[d.getMonth()]; },
-    B: function(d) { return jdate.monthNames[d.getMonth()]; },
+    a: function(d) { return dayNamesShort[d.getDay()]; },
+    A: function(d) { return dayNames[d.getDay()]; },
+    b: function(d) { return monthNamesShort[d.getMonth()]; },
+    B: function(d) { return monthNames[d.getMonth()]; },
     c: function(d) { return d.toLocaleString(); },
-    C: function(d) { return jdate._date.century(d) },
-    d: function(d) { return jdate._number.pad(d.getDate(), 2); },
-    e: function(d) { return jdate._number.pad(d.getDate(), 2, ' '); },
-    H: function(d) { return jdate._number.pad(d.getHours(), 2); },
-    I: function(d) { return jdate._number.pad(d.getHours() % 12 || 12, 2); },
-    j: function(d) { return jdate._number.pad(jdate._date.getDayOfYear(d), 3); },
-    k: function(d) { return jdate._number.pad(d.getHours(), 2, ' '); },
-    l: function(d) { return jdate._number.pad(d.getHours() % 12 || 12, 2, ' '); },
-    L: function(d) { return jdate._number.pad(d.getMilliseconds(), 3); },
-    m: function(d) { return jdate._number.pad(d.getMonth() + 1, 2); },
-    M: function(d) { return jdate._number.pad(d.getMinutes(), 2); },
+    C: function(d) { return _date.century(d) },
+    d: function(d) { return _number.pad(d.getDate(), 2); },
+    e: function(d) { return _number.pad(d.getDate(), 2, ' '); },
+    H: function(d) { return _number.pad(d.getHours(), 2); },
+    I: function(d) { return _number.pad(d.getHours() % 12 || 12, 2); },
+    j: function(d) { return _number.pad(_date.getDayOfYear(d), 3); },
+    k: function(d) { return _number.pad(d.getHours(), 2, ' '); },
+    l: function(d) { return _number.pad(d.getHours() % 12 || 12, 2, ' '); },
+    L: function(d) { return _number.pad(d.getMilliseconds(), 3); },
+    m: function(d) { return _number.pad(d.getMonth() + 1, 2); },
+    M: function(d) { return _number.pad(d.getMinutes(), 2); },
     p: function(d) { return (d.getHours() < 12 ? 'AM' : 'PM'); },
     P: function(d) { return (d.getHours() < 12 ? 'am' : 'pm'); },
-    q: function(d) { return jdate._date.getSuffix(d); },
+    q: function(d) { return _date.getSuffix(d); },
     s: function(d) { return Math.round(d.valueOf() / 1000); },
-    S: function(d) { return jdate._number.pad(d.getSeconds(), 2); },
+    S: function(d) { return _number.pad(d.getSeconds(), 2); },
     u: function(d) { return d.getDay() || 7; },
-    U: function(d) { return jdate._date.getWeekOfYear(d, 0); },
+    U: function(d) { return _date.getWeekOfYear(d, 0); },
     w: function(d) { return d.getDay(); },
-    W: function(d) { return jdate._date.getWeekOfYear(d, 1); },
+    W: function(d) { return _date.getWeekOfYear(d, 1); },
     x: function(d) { return d.toLocaleDateString(); },
     X: function(d) { return d.toLocaleTimeString(); },
     y: function(d) { return d.getFullYear().toString().substring(2, 4); },
@@ -154,7 +154,7 @@ var jdate = {};
     // assumption that it will return negative for GMT+x
     z: function(d) { 
       var tz = d.getTimezoneOffset() / 60 * 100; 
-      return (tz > 0 ? '-' : '+') + jdate._number.pad(tz, 4);
+      return (tz > 0 ? '-' : '+') + _number.pad(tz, 4);
     },
     "%": function() { return '%'; }
   };
@@ -163,30 +163,31 @@ var jdate = {};
 
 
   // TODO: handle invalid parse codes better
+  // r stands for regex, p stands for parser
   var parse_codes = {
-    a: { regex: "(?:" + jdate.dayNamesShort.join("|") + ")" },
-    A: { regex: "(?:" + jdate.dayNames.join("|") + ")" },
+    a: { r: "(?:" + dayNamesShort.join("|") + ")" },
+    A: { r: "(?:" + dayNames.join("|") + ")" },
     b: {
-      regex: "(" + jdate.monthNamesShort.join("|") + ")",
-      parser: function(data) { this.month = $.inArray(data, jdate.monthNamesShort); }
+      r: "(" + monthNamesShort.join("|") + ")",
+      p: function(data) { this.month = $.inArray(data, monthNamesShort); }
     },
     B: {
-      regex: "(" + jdate.monthNames.join("|") + ")",
-      parser: function(data) { this.month = jdate.monthNames.indexOf(data); }
+      r: "(" + monthNames.join("|") + ")",
+      p: function(data) { this.month = monthNames.indexOf(data); }
     },
-    C: { regex: "(\\d{1,2})", parser: function(d) { this.century = parseInt(d)} },
-    d: { regex: "(\\d{1,2})", parser: function(d) { this.day = parseInt(d); } },
-    H: { regex: "(\\d{1,2})", parser: function(d) { this.hour = parseInt(d); } },
+    C: { r: "(\\d{1,2})", p: function(d) { this.century = parseInt(d)} },
+    d: { r: "(\\d{1,2})", p: function(d) { this.day = parseInt(d); } },
+    H: { r: "(\\d{1,2})", p: function(d) { this.hour = parseInt(d); } },
     // This gives only the day. Parsing of the month happens at the end because
     // we also need the year
-    j: { regex: "(\\d{1,3})", parser: function(d) { this.day = parseInt(d); } },
-    L: { regex: "(\\d{3})", parser: function(d) { this.milliseconds = parseInt(d); } },
-    m: { regex: "(\\d{1,2})", parser: function(d) { this.month = parseInt(d) - 1; } },
-    M: { regex: "(\\d{2})", parser: function (d) { this.minute = parseInt(d); } },
-    M: { regex: "(\\d{2})", parser: function (d) { this.minute = parseInt(d); } },
+    j: { r: "(\\d{1,3})", p: function(d) { this.day = parseInt(d); } },
+    L: { r: "(\\d{3})", p: function(d) { this.milliseconds = parseInt(d); } },
+    m: { r: "(\\d{1,2})", p: function(d) { this.month = parseInt(d) - 1; } },
+    M: { r: "(\\d{2})", p: function (d) { this.minute = parseInt(d); } },
+    M: { r: "(\\d{2})", p: function (d) { this.minute = parseInt(d); } },
     p: {
-      regex: "(AM|PM)",
-      parser: function(d) {
+      r: "(AM|PM)",
+      p: function(d) {
         if (d == 'AM') {
           if (this.hour == 12) { this.hour = 0; }
         } else {
@@ -195,8 +196,8 @@ var jdate = {};
       }
     },
     P: {
-      regex: "(am|pm)",
-      parser: function(d) {
+      r: "(am|pm)",
+      p: function(d) {
         if (d == 'am') {
           if (this.hour == 12) { this.hour = 0; }
         } else {
@@ -204,16 +205,16 @@ var jdate = {};
         }
       }
     },
-    q: { regex: "(?:" + jdate._obj.values_of(jdate.suffixes).join('|') + ")" },
-    S: { regex: "(\\d{2})", parser: function(d) { this.second = parseInt(d); } },
-    y: { regex: "(\\d{1,2})", parser: function(d) { this.year = parseInt(d); } },
-    Y: { regex: "(\\d{4})", parser: function(d) { 
+    q: { r: "(?:" + _obj.values_of(suffixes).join('|') + ")" },
+    S: { r: "(\\d{2})", p: function(d) { this.second = parseInt(d); } },
+    y: { r: "(\\d{1,2})", p: function(d) { this.year = parseInt(d); } },
+    Y: { r: "(\\d{4})", p: function(d) { 
       this.century = Math.floor(parseInt(d) / 100);
       this.year = parseInt(d) % 100;
     }},
     z: { // "Z", "+05:00", "+0500" all acceptable.
-      regex: "(Z|[+-]\\d{2}:?\\d{2})",
-      parser: function(d) { 
+      r: "(Z|[+-]\\d{2}:?\\d{2})",
+      p: function(d) { 
         // UTC, no offset.
         if (d == "Z") { 
           this.zone = 0;
@@ -239,7 +240,7 @@ var jdate = {};
   parse_codes.l = parse_codes.H;
 
 
-  jdate._date.strftime = function(d, format) {
+  jdate.strftime = function(d, format) {
     var pairs = format.split(/(%.)/);
     for (var i = 1; i < pairs.length; i += 2) {
       var ch = pairs[i].charAt(1);
@@ -248,7 +249,6 @@ var jdate = {};
     }
     return pairs.join('');
   };
-  jdate.strftime = jdate._date.strftime;
 
   jdate.strptime = function(input, format) {
     var pairs = format.split(/(%.)/);
@@ -258,8 +258,8 @@ var jdate = {};
     for (var i = 1; i < pairs.length; i += 2) {
       var ch = pairs[i].charAt(1);
       var obj = parse_codes[ch];
-      if (obj.parser) { parsers = parsers.concat(obj.parser); }
-      pairs[i] = obj.regex;
+      if (obj.p) { parsers = parsers.concat(obj.p); }
+      pairs[i] = obj.r;
     }
 
     // Run the regex against the input
@@ -284,7 +284,7 @@ var jdate = {};
         date_obj.year += date_obj.century * 100;
       } else {
         // Assume the year is within 50 of now
-        date_obj.year += this._date.century(now) * 100;
+        date_obj.year += _date.century(now) * 100;
         var fifty_years = new Date(now.getFullYear() + 50, now.getMonth(), now.getDate());
         if (date_obj.year > fifty_years) date_obj.year -= 100;
       }
@@ -295,7 +295,7 @@ var jdate = {};
     // work out whether we're in a leap year.
     if (date_obj.year && date_obj.day && !date_obj.month) {
       var d = new Date(date_obj.year, 0, 1);
-      var months = jdate.daysInMonth(d);
+      var months = _date.daysInMonth(d);
 
       for (var i = 0; i < months.length; i++) {
         if (date_obj.day <= months[i]) {

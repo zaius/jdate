@@ -136,13 +136,6 @@ test("2 digit year parsing", function() {
   // TODO: fill this out
 });
 
-test("Number padding", function() {
-  equals("0001", jdate._number.pad(1, 4), "Default padding is zeros");
-  equals("   1", jdate._number.pad(1, 4, " "), "Padding with spaces");
-  equals("0000", jdate._number.pad(0, 4), "Padding of zero works");
-  equals("10000", jdate._number.pad(10000, 4), "Padding only happens to small numbers");
-});
-
 test("Extension to base classes", function() {
   jdate.extend_date();
 
