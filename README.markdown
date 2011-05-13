@@ -39,9 +39,9 @@ Cons: Only for printing, not for parsing
 
     var s = "2011-04-21T01:42:57+1200"
     var format = "%Y-%m-%dT%H:%M:%S%z"
-    var parsed = date.strptime(s, format);
+    var parsed = jdate.strptime(s, format);
 
-    console.log(date.strftime(parsed, format));
+    console.log(jdate.strftime(parsed, format));
 
 
 ## Base classes ##
@@ -83,9 +83,9 @@ for unimplemented formats are below.
     ✓, x  %c - The preferred local date and time representation
     ✓, ✓  %C - Century (20 in 2009)
     ✓, ✓  %d - Day of the month (01..31)
-    ✓, x  %D - Date (%m/%d/%y)
+    x, x  %D - Date (%m/%d/%y)
     ✓, ✓  %e - Day of the month, blank-padded ( 1..31)
-    ✓, x  %F - Equivalent to %Y-%m-%d (the ISO 8601 date format)
+    x, x  %F - Equivalent to %Y-%m-%d (the ISO 8601 date format)
     ✓, ✓  %h - Equivalent to %b
     ✓, ✓  %H - Hour of the day, 24-hour clock (00..23)
     ✓, ✓  %I - Hour of the day, 12-hour clock (01..12)
@@ -100,15 +100,15 @@ for unimplemented formats are below.
     ✓, ✓  %p - Meridian indicator (AM / PM)
     ✓, ✓  %P - Meridian indicator (am / pm)
     ✓, ✓  %q - (NONSTANDARD) Suffix for day of the month (st for 1, nd for 2, etc.)
-    ✓, ?  %r - time, 12-hour (same as %I:%M:%S %p)
-    ✓, ?  %R - time, 24-hour (%H:%M)
+    x, x  %r - time, 12-hour (same as %I:%M:%S %p)
+    x, x  %R - time, 24-hour (%H:%M)
     ✓, x  %s - Number of seconds since 1970-01-01 00:00:00 UTC.
     ✓, ✓  %S - Second of the minute (00..60)
     x, x  %t - Tab character (\t)
-    ✓, x  %T - time, 24-hour (%H:%M:%S)
+    x, x  %T - time, 24-hour (%H:%M:%S)
     ✓, ?  %u - Day of the week as a decimal, Monday being 1. (1..7)
     ✓, ?  %U - Week  number of the current year, starting with the first Sunday as the first day of the first week (00..53)
-    ✓, x  %v - VMS date (%e-%b-%Y)
+    x, x  %v - VMS date (%e-%b-%Y)
     x, x  %V - Week number of year according to ISO 8601 (01..53)
     ✓, ?  %w - Day of the week (Sunday is 0, 0..6)
     ✓, ?  %W - Week number  of the current year, starting with the first Monday as the first day of the first week (00..53)
@@ -122,6 +122,8 @@ for unimplemented formats are below.
 
 
 ### Omissions ###
+%D, %F, %r, %R, %T, %v - Just use the full version of the formats.
+
 %n, %t - You can just use the \n and \t literals.
 
 %N - Javascript's Date doesn't have resolution below millisecond, so this is

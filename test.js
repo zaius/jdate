@@ -7,14 +7,12 @@ test("All formatting outputs", function() {
   equals('April', jdate.strftime(d, '%B'), "B: Full month name");
   equals('20', jdate.strftime(d, '%C'), "C: Century");
   equals('21', jdate.strftime(d, '%d'), "d: Day of the month, zero padded");
-  equals('04/21/11', jdate.strftime(d, '%D'), "D: Date %m/%d/%y");
   equals('21', jdate.strftime(d, '%e'), "e: Day of the month, blank padded");
 
   var first = new Date(2011, 0, 1);
   equals('01', jdate.strftime(first, '%d'), "d: Day of the month: Expect leading zero");
   equals(' 1', jdate.strftime(first, '%e'), "e: Day of the month: Expect leading space");
 
-  equals('2011-04-21', jdate.strftime(d, '%F'), "F: ISO 8601 date %Y-%m-%d");
   equals('Apr', jdate.strftime(d, '%h'), "h: Abbreviated month name");
   equals('01', jdate.strftime(d, '%H'), "H: Hour in 24-hour, zero padded");
   equals('01', jdate.strftime(d, '%I'), "I: Hour in 12-hour, zero padded");
@@ -49,14 +47,10 @@ test("All formatting outputs", function() {
   equals('am', jdate.strftime(d, '%P'), "p: Lower case am/pm");
   equals('st', jdate.strftime(d, '%q'), "q: Date suffix");
 
-  equals("01:42:57 AM", jdate.strftime(d, '%r'), "r: Time, 12 hour");
-  equals('01:42', jdate.strftime(d, '%R'), "R: Time, 24 hour");
   equals('1303375377', jdate.strftime(d, '%s'), "s: Seconds since epoch");
   equals('57', jdate.strftime(d, '%S'), "S: Second of the minute");
-  equals('01:42:57', jdate.strftime(d, '%T'), "T: Time, 24 hour");
   equals('4', jdate.strftime(d, '%u'), "u: Day of the week, 1-7, Monday is 1");
   equals('16', jdate.strftime(d, '%U'), "U: Week number, with Sunday as first day");
-  equals('21-Apr-2011', jdate.strftime(d, '%v'), "v: VMS date (%e-%b-%Y)");
   equals('4', jdate.strftime(d, '%w'), "w: Day of the week, 0-6, Sunday is 0");
 
   var sunday = new Date(2011, 3, 3);
