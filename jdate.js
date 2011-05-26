@@ -280,13 +280,14 @@ var jdate = {};
     var now = new Date();
 
     if (date_obj.year) {
+      // Century is set with an explicit century and for 4 digit years
       if (date_obj.century) {
         date_obj.year += date_obj.century * 100;
       } else {
-        // Assume the year is within 50 of now
+        // We have a 2 digit year. Assume the year is within 50 of now
         date_obj.year += _date.century(now) * 100;
         var fifty_years = new Date(now.getFullYear() + 50, now.getMonth(), now.getDate());
-        if (date_obj.year > fifty_years) date_obj.year -= 100;
+        if (date_obj.year > fifty_years.getFullYear()) date_obj.year -= 100;
       }
     }
 

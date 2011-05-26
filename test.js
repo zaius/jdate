@@ -125,15 +125,15 @@ test("Timezones", function() {
 
 // TODO: test 2 digit year parsing (i.e. the < 50 year logic)
 test("2 digit year parsing", function() {
-  var d = new Date();
+  var d, parsed;
 
-  // 5 years from now is considered in this century
-  var five_years = (d.getYear() + 5) % 100
+  d = new Date(1998, 3, 21, 1, 42, 57);
+  parsed = jdate.strptime("1:42:57am 21st April 98", "%I:%M:%S%P %d%q %B %y")
+  equals(parsed.valueOf(), d.valueOf(), "2 digit year in the past");
 
-  // 49 years ago is considered in this century
-  // 49 years from now is considered in this century
-  //
-  // TODO: fill this out
+  d = new Date(2028, 3, 21, 1, 42, 57);
+  parsed = jdate.strptime("1:42:57am 21st April 28", "%I:%M:%S%P %d%q %B %y")
+  equals(parsed.valueOf(), d.valueOf(), "2 digit year in the future");
 });
 
 test("Extension to base classes", function() {
