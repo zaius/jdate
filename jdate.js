@@ -283,8 +283,6 @@ var jdate = {};
 
     var now = new Date();
 
-
-      console.log(date_obj);
     if (date_obj.year) {
       // Century is set with an explicit century and for 4 digit years
       if (date_obj.century) {

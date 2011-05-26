@@ -123,7 +123,6 @@ test("Timezones", function() {
   equals(d.valueOf(), parsed.valueOf(), "Offset converted to local");
 });
 
-// TODO: test 2 digit year parsing (i.e. the < 50 year logic)
 test("2 digit year parsing", function() {
   var d, parsed;
 
@@ -133,7 +132,6 @@ test("2 digit year parsing", function() {
 
   d = new Date(2008, 3, 21, 1, 42, 57);
   parsed = jdate.strptime("1:42:57am 21st April 08", "%I:%M:%S%P %d%q %B %y")
-  console.log(parsed);
   equals(parsed.valueOf(), d.valueOf(), "2 digit year with leading zero");
 
   d = new Date(2028, 3, 21, 1, 42, 57);
