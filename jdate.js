@@ -94,7 +94,7 @@ var jdate = {};
     },
 
     century: function(d) {
-      return parseInt(d.getFullYear().toString().substring(0, 2));
+      return parseInt(d.getFullYear().toString().substring(0, 2), 10);
     }
   };
 
@@ -163,7 +163,11 @@ var jdate = {};
 
 
   // TODO: handle invalid parse codes better
-  // r stands for regex, p stands for parser
+  // * r stands for regex, p stands for parser
+  // * all parseInt calls have to have the base supplied as the second
+  //   parameter, otherwise they will default to octal when parsing numbers
+  //   with leading zeros. This is most evident when parsing a date with 08 as
+  //   the minutes / year as 08 is an invalid octal number, and so returns 0
   var parse_codes = {
     a: { r: "(?:" + dayNamesShort.join("|") + ")" },
     A: { r: "(?:" + dayNames.join("|") + ")" },
@@ -175,16 +179,16 @@ var jdate = {};
       r: "(" + monthNames.join("|") + ")",
       p: function(data) { this.month = monthNames.indexOf(data); }
     },
-    C: { r: "(\\d{1,2})", p: function(d) { this.century = parseInt(d)} },
-    d: { r: "(\\d{1,2})", p: function(d) { this.day = parseInt(d); } },
-    H: { r: "(\\d{1,2})", p: function(d) { this.hour = parseInt(d); } },
+    C: { r: "(\\d{1,2})", p: function(d) { this.century = parseInt(d, 10)} },
+    d: { r: "(\\d{1,2})", p: function(d) { this.day = parseInt(d, 10); } },
+    H: { r: "(\\d{1,2})", p: function(d) { this.hour = parseInt(d, 10); } },
     // This gives only the day. Parsing of the month happens at the end because
     // we also need the year
-    j: { r: "(\\d{1,3})", p: function(d) { this.day = parseInt(d); } },
-    L: { r: "(\\d{3})", p: function(d) { this.milliseconds = parseInt(d); } },
-    m: { r: "(\\d{1,2})", p: function(d) { this.month = parseInt(d) - 1; } },
-    M: { r: "(\\d{2})", p: function (d) { this.minute = parseInt(d); } },
-    M: { r: "(\\d{2})", p: function (d) { this.minute = parseInt(d); } },
+    j: { r: "(\\d{1,3})", p: function(d) { this.day = parseInt(d, 10); } },
+    L: { r: "(\\d{3})", p: function(d) { this.milliseconds = parseInt(d, 10); } },
+    m: { r: "(\\d{1,2})", p: function(d) { this.month = parseInt(d, 10) - 1; } },
+    M: { r: "(\\d{2})", p: function (d) { this.minute = parseInt(d, 10); } },
+    M: { r: "(\\d{2})", p: function (d) { this.minute = parseInt(d, 10); } },
     p: {
       r: "(AM|PM)",
       p: function(d) {
@@ -206,11 +210,11 @@ var jdate = {};
       }
     },
     q: { r: "(?:" + _obj.values_of(suffixes).join('|') + ")" },
-    S: { r: "(\\d{2})", p: function(d) { this.second = parseInt(d); } },
-    y: { r: "(\\d{1,2})", p: function(d) { this.year = parseInt(d); } },
+    S: { r: "(\\d{2})", p: function(d) { this.second = parseInt(d, 10); } },
+    y: { r: "(\\d{1,2})", p: function(d) {  this.year = parseInt(d, 10); } },
     Y: { r: "(\\d{4})", p: function(d) { 
-      this.century = Math.floor(parseInt(d) / 100);
-      this.year = parseInt(d) % 100;
+      this.century = Math.floor(parseInt(d, 10) / 100);
+      this.year = parseInt(d, 10) % 100;
     }},
     z: { // "Z", "+05:00", "+0500" all acceptable.
       r: "(Z|[+-]\\d{2}:?\\d{2})",
@@ -221,13 +225,13 @@ var jdate = {};
           return; 
         }
 
-        var seconds = parseInt(d[0] + d[1] + d[2]) * 3600 ; // e.g., "+05" or "-08"
+        var seconds = parseInt(d[0] + d[1] + d[2], 10) * 3600 ; // e.g., "+05" or "-08"
         if (d[3] == ":") {
           // "+HH:MM" is preferred iso8601 format
-          seconds += parseInt(d[4] + d[5]) * 60;
+          seconds += parseInt(d[4] + d[5], 10) * 60;
         } else {
           // "+HHMM" is frequently used, though.
-          seconds += parseInt(d[3] + d[4]) * 60;
+          seconds += parseInt(d[3] + d[4], 10) * 60;
         }
         this.zone = seconds;
       }
@@ -279,6 +283,8 @@ var jdate = {};
 
     var now = new Date();
 
+
+      console.log(date_obj);
     if (date_obj.year) {
       // Century is set with an explicit century and for 4 digit years
       if (date_obj.century) {

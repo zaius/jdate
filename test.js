@@ -127,9 +127,14 @@ test("Timezones", function() {
 test("2 digit year parsing", function() {
   var d, parsed;
 
-  d = new Date(1998, 3, 21, 1, 42, 57);
-  parsed = jdate.strptime("1:42:57am 21st April 98", "%I:%M:%S%P %d%q %B %y")
+  d = new Date(1988, 3, 21, 1, 42, 57);
+  parsed = jdate.strptime("1:42:57am 21st April 88", "%I:%M:%S%P %d%q %B %y")
   equals(parsed.valueOf(), d.valueOf(), "2 digit year in the past");
+
+  d = new Date(2008, 3, 21, 1, 42, 57);
+  parsed = jdate.strptime("1:42:57am 21st April 08", "%I:%M:%S%P %d%q %B %y")
+  console.log(parsed);
+  equals(parsed.valueOf(), d.valueOf(), "2 digit year with leading zero");
 
   d = new Date(2028, 3, 21, 1, 42, 57);
   parsed = jdate.strptime("1:42:57am 21st April 28", "%I:%M:%S%P %d%q %B %y")
