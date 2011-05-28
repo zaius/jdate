@@ -152,8 +152,8 @@ var jdate = {};
     // TODO: guessing the pad function won't work with negative numbers?
     // TODO: getTimezoneOffset returns a positive number for GMT-7. Verify my
     // assumption that it will return negative for GMT+x
-    z: function(d) { 
-      var tz = d.getTimezoneOffset() / 60 * 100; 
+    z: function(d) {
+      var tz = d.getTimezoneOffset() / 60 * 100;
       return (tz > 0 ? '-' : '+') + _number.pad(tz, 4);
     },
     "%": function() { return '%'; }
@@ -212,17 +212,17 @@ var jdate = {};
     q: { r: "(?:" + _obj.values_of(suffixes).join('|') + ")" },
     S: { r: "(\\d{2})", p: function(d) { this.second = parseInt(d, 10); } },
     y: { r: "(\\d{1,2})", p: function(d) {  this.year = parseInt(d, 10); } },
-    Y: { r: "(\\d{4})", p: function(d) { 
+    Y: { r: "(\\d{4})", p: function(d) {
       this.century = Math.floor(parseInt(d, 10) / 100);
       this.year = parseInt(d, 10) % 100;
     }},
     z: { // "Z", "+05:00", "+0500" all acceptable.
       r: "(Z|[+-]\\d{2}:?\\d{2})",
-      p: function(d) { 
+      p: function(d) {
         // UTC, no offset.
-        if (d == "Z") { 
+        if (d == "Z") {
           this.zone = 0;
-          return; 
+          return;
         }
 
         var seconds = parseInt(d[0] + d[1] + d[2], 10) * 3600 ; // e.g., "+05" or "-08"
@@ -283,9 +283,9 @@ var jdate = {};
 
     var now = new Date();
 
-    if (date_obj.year) {
+    if ("year" in date_obj) {
       // Century is set with an explicit century and for 4 digit years
-      if (date_obj.century) {
+      if ("century" in date_obj) {
         date_obj.year += date_obj.century * 100;
       } else {
         // We have a 2 digit year. Assume the year is within 50 of now
@@ -298,7 +298,7 @@ var jdate = {};
     // Convert day-of-year into day and month
     // Have to do it here instead of in the parser, because we need the year to
     // work out whether we're in a leap year.
-    if (date_obj.year && date_obj.day && !date_obj.month) {
+    if ("year" in date_obj && "day" in date_obj && !("month" in date_obj)) {
       var d = new Date(date_obj.year, 0, 1);
       var months = _date.daysInMonth(d);
 
@@ -311,10 +311,16 @@ var jdate = {};
       }
     }
 
+    // Because 0 is falsey, have to explicitly check for keys when replacing
+    // a value with anything other than zero.
     var parsed = new Date(
-      date_obj.year || now.getFullYear(), date_obj.month || now.getMonth(),
-      date_obj.day || now.getDate(), date_obj.hour || 0, date_obj.minute || 0,
-      date_obj.second || 0, date_obj.milliseconds || 0
+      "year" in date_obj ? date_obj.year : now.getFullYear(),
+      "month" in date_obj ? date_obj.month : now.getMonth(),
+      "day" in date_obj ? date_obj.day : now.getDate(),
+      date_obj.hour || 0,
+      date_obj.minute || 0,
+      date_obj.second || 0,
+      date_obj.milliseconds || 0
     );
 
     return parsed;

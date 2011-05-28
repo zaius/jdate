@@ -111,7 +111,15 @@ test("Standard date parsing", function() {
   parsed = jdate.strptime("2011-04-21T01:42:57+1200", "%Y-%m-%dT%H:%M:%S%z");
   equals(parsed.valueOf(), d.valueOf(), "Parsing timezone");
 
-  // TODO: pre-epoch parsing
+  var early = new Date(1922, 3, 21);
+  parsed = jdate.strptime("21st Apr 1922", "%d%q %b %Y")
+  equals(parsed.valueOf(), early.valueOf(), "Pre-epoch parsing");
+});
+
+test("Parse bugs", function() {
+  var d = new Date(2000, 0, 1);
+  var parsed = jdate.strptime("2000-01-01", "%Y-%m-%d");
+  equals(parsed.valueOf(), d.valueOf(), "Check zero year / month aren't skipped");
 });
 
 test("Timezones", function() {
@@ -137,6 +145,10 @@ test("2 digit year parsing", function() {
   d = new Date(2028, 3, 21, 1, 42, 57);
   parsed = jdate.strptime("1:42:57am 21st April 28", "%I:%M:%S%P %d%q %B %y")
   equals(parsed.valueOf(), d.valueOf(), "2 digit year in the future");
+
+  d = new Date(2000, 0, 1, 1, 42, 57);
+  parsed = jdate.strptime("1:42:57am 1st January 00", "%I:%M:%S%P %d%q %B %y")
+  equals(parsed.valueOf(), d.valueOf(), "2 digit year for 2000");
 });
 
 test("Extension to base classes", function() {
