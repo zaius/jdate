@@ -1,78 +1,78 @@
 test("All formatting outputs", function() {
   var d = new Date(2011, 3, 21, 1, 42, 57, 123);
 
-  equals('Thu', jdate.strftime(d, '%a'), "a: Abbreviated weekday name");
-  equals('Thursday', jdate.strftime(d, '%A'), "A: Full weekday name");
-  equals('Apr', jdate.strftime(d, '%b'), "b: Abbreviated month name");
-  equals('April', jdate.strftime(d, '%B'), "B: Full month name");
-  equals('20', jdate.strftime(d, '%C'), "C: Century");
-  equals('21', jdate.strftime(d, '%d'), "d: Day of the month, zero padded");
-  equals('21', jdate.strftime(d, '%e'), "e: Day of the month, blank padded");
+  equals(jdate.strftime(d, '%a'), 'Thu', "a: Abbreviated weekday name");
+  equals(jdate.strftime(d, '%A'), 'Thursday', "A: Full weekday name");
+  equals(jdate.strftime(d, '%b'), 'Apr', "b: Abbreviated month name");
+  equals(jdate.strftime(d, '%B'), 'April', "B: Full month name");
+  equals(jdate.strftime(d, '%C'), '20', "C: Century");
+  equals(jdate.strftime(d, '%d'), '21', "d: Day of the month, zero padded");
+  equals(jdate.strftime(d, '%e'), '21', "e: Day of the month, blank padded");
 
   var first = new Date(2011, 0, 1);
-  equals('01', jdate.strftime(first, '%d'), "d: Day of the month: Expect leading zero");
-  equals(' 1', jdate.strftime(first, '%e'), "e: Day of the month: Expect leading space");
+  equals(jdate.strftime(first, '%d'), '01', "d: Day of the month: Expect leading zero");
+  equals(jdate.strftime(first, '%e'), ' 1', "e: Day of the month: Expect leading space");
 
-  equals('Apr', jdate.strftime(d, '%h'), "h: Abbreviated month name");
-  equals('01', jdate.strftime(d, '%H'), "H: Hour in 24-hour, zero padded");
-  equals('01', jdate.strftime(d, '%I'), "I: Hour in 12-hour, zero padded");
-  equals(' 1', jdate.strftime(d, '%k'), "k: Hour in 24-hour, blank padded");
-  equals(' 1', jdate.strftime(d, '%l'), "l: Two digit hour in 12-hour, blank padded");
+  equals(jdate.strftime(d, '%h'), 'Apr', "h: Abbreviated month name");
+  equals(jdate.strftime(d, '%H'), '01', "H: Hour in 24-hour, zero padded");
+  equals(jdate.strftime(d, '%I'), '01', "I: Hour in 12-hour, zero padded");
+  equals(jdate.strftime(d, '%k'), ' 1', "k: Hour in 24-hour, blank padded");
+  equals(jdate.strftime(d, '%l'), ' 1', "l: Two digit hour in 12-hour, blank padded");
 
   var evening = new Date(2011, 3, 1, 21, 2, 3, 1);
-  equals('21', jdate.strftime(evening, '%H'), "H: Hour in PM in 24-hour");
-  equals('09', jdate.strftime(evening, '%I'), "I: Hour in PM in 12-hour");
-  equals('21', jdate.strftime(evening, '%k'), "k: Hour in PM in 24-hour");
-  equals(' 9', jdate.strftime(evening, '%l'), "l: Hour in PM in 12-hour");
+  equals(jdate.strftime(evening, '%H'), '21', "H: Hour in PM in 24-hour");
+  equals(jdate.strftime(evening, '%I'), '09', "I: Hour in PM in 12-hour");
+  equals(jdate.strftime(evening, '%k'), '21', "k: Hour in PM in 24-hour");
+  equals(jdate.strftime(evening, '%l'), ' 9', "l: Hour in PM in 12-hour");
 
   var noon = new Date(2011, 3, 1, 12, 0, 0);
-  equals('12', jdate.strftime(noon, '%I'), "I: Noon in 12-hour");
-  equals('12', jdate.strftime(noon, '%l'), "l: Noon in 12-hour");
+  equals(jdate.strftime(noon, '%I'), '12', "I: Noon in 12-hour");
+  equals(jdate.strftime(noon, '%l'), '12', "l: Noon in 12-hour");
 
   var midnight = new Date(2011, 3, 1, 0, 0, 0);
-  equals('12', jdate.strftime(midnight, '%I'), "I: Midnight in 12-hour");
-  equals('12', jdate.strftime(midnight, '%l'), "l: Midnight in 12-hour");
+  equals(jdate.strftime(midnight, '%I'), '12', "I: Midnight in 12-hour");
+  equals(jdate.strftime(midnight, '%l'), '12', "l: Midnight in 12-hour");
 
-  equals('111', jdate.strftime(d, '%j'), "j: Day of the year");
-  equals('001', jdate.strftime(first, '%j'), "j: Expect leading zeros");
+  equals(jdate.strftime(d, '%j'), '111', "j: Day of the year");
+  equals(jdate.strftime(first, '%j'), '001', "j: Expect leading zeros");
   var leap = new Date(2012, 3, 21);
-  equals('112', jdate.strftime(leap, '%j'), "j: Handle leap years");
+  equals(jdate.strftime(leap, '%j'), '112', "j: Handle leap years");
 
-  equals('123', jdate.strftime(d, '%L'), "L: Millisecond of the second");
-  equals('001', jdate.strftime(evening, '%L'), "L: Millisecond, zero padded");
-  equals('04', jdate.strftime(d, '%m'), "m: Month of the year, zero padded");
-  equals('42', jdate.strftime(d, '%M'), "M: Minute of the hour, zero padded");
+  equals(jdate.strftime(d, '%L'), '123', "L: Millisecond of the second");
+  equals(jdate.strftime(evening, '%L'), '001', "L: Millisecond, zero padded");
+  equals(jdate.strftime(d, '%m'), '04', "m: Month of the year, zero padded");
+  equals(jdate.strftime(d, '%M'), '42', "M: Minute of the hour, zero padded");
 
-  equals('AM', jdate.strftime(d, '%p'), "P: Upper case am/pm");
-  equals('am', jdate.strftime(d, '%P'), "p: Lower case am/pm");
-  equals('st', jdate.strftime(d, '%q'), "q: Date suffix");
+  equals(jdate.strftime(d, '%p'), 'AM', "P: Upper case am/pm");
+  equals(jdate.strftime(d, '%P'), 'am', "p: Lower case am/pm");
+  equals(jdate.strftime(d, '%q'), 'st', "q: Date suffix");
 
-  equals('1303375377', jdate.strftime(d, '%s'), "s: Seconds since epoch");
-  equals('57', jdate.strftime(d, '%S'), "S: Second of the minute");
-  equals('4', jdate.strftime(d, '%u'), "u: Day of the week, 1-7, Monday is 1");
-  equals('16', jdate.strftime(d, '%U'), "U: Week number, with Sunday as first day");
-  equals('4', jdate.strftime(d, '%w'), "w: Day of the week, 0-6, Sunday is 0");
+  equals(jdate.strftime(d, '%s'), '1303375377', "s: Seconds since epoch");
+  equals(jdate.strftime(d, '%S'), '57', "S: Second of the minute");
+  equals(jdate.strftime(d, '%u'), '4', "u: Day of the week, 1-7, Monday is 1");
+  equals(jdate.strftime(d, '%U'), '16', "U: Week number, with Sunday as first day");
+  equals(jdate.strftime(d, '%w'), '4', "w: Day of the week, 0-6, Sunday is 0");
 
   var sunday = new Date(2011, 3, 3);
-  equals('7', jdate.strftime(sunday, '%u'), "u: ISO numeric day of the week: Sunday is 7");
-  equals('0', jdate.strftime(sunday, '%w'), "w: Numeric day of the week: Sunday is 0");
+  equals(jdate.strftime(sunday, '%u'), '7', "u: ISO numeric day of the week: Sunday is 7");
+  equals(jdate.strftime(sunday, '%w'), '0', "w: Numeric day of the week: Sunday is 0");
 
   // TODO: test the boundary between monday and sunday, i.e. %U and %W
-  equals('16', jdate.strftime(d, '%W'), "W: Week number, with Monday as first day");
-  equals('11', jdate.strftime(d, '%y'), "y: Two digit year");
-  equals('2011', jdate.strftime(d, '%Y'), "Y: Four digit year");
+  equals(jdate.strftime(d, '%W'), '16', "W: Week number, with Monday as first day");
+  equals(jdate.strftime(d, '%y'), '11', "y: Two digit year");
+  equals(jdate.strftime(d, '%Y'), '2011', "Y: Four digit year");
 
   // TODO: how can I make this work everywhere?
-  equals('-0700', jdate.strftime(d, '%z'), "z: Time zone as UTC offset");
-  equals('%', jdate.strftime(d, '%%'), "%: Literal %");
+  equals(jdate.strftime(d, '%z'), '-0700', "z: Time zone as UTC offset");
+  equals(jdate.strftime(d, '%%'), '%', "%: Literal %");
 });
 
 test("Tricky format strings", function() {
   var d = new Date(2011, 3, 21, 1, 42, 57);
-  equals('%%', jdate.strftime(d, '%%%%'), "Multiple literal %");
-  equals('%21', jdate.strftime(d, '%%%d'), "Adjacent % signs");
-  equals('21%%', jdate.strftime(d, '%d%%%'), "Uneven percentages");
-  equals('% %$', jdate.strftime(d, '% %$'), "Unknown codes");
+  equals(jdate.strftime(d, '%%%%'), '%%', "Multiple literal %");
+  equals(jdate.strftime(d, '%%%d'), '%21', "Adjacent % signs");
+  equals(jdate.strftime(d, '%d%%%'), '21%%', "Uneven percentages");
+  equals(jdate.strftime(d, '% %$'), '% %$', "Unknown codes");
 });
 
 
@@ -129,19 +129,19 @@ test("Timezones", function() {
   var parsed;
 
   parsed = jdate.strptime("2011-04-21T08:42:57+0000", format)
-  equals(d.valueOf(), parsed.valueOf(), "Zero GMT offset");
+  equals(parsed.valueOf(), d.valueOf(), "Zero GMT offset");
 
   parsed = jdate.strptime("2011-04-21T14:42:57+0600", format)
-  equals(d.valueOf(), parsed.valueOf(), "Positive GMT offset");
+  equals(parsed.valueOf(), d.valueOf(), "Positive GMT offset");
 
   parsed = jdate.strptime("2011-04-20T20:42:57-1200", format)
-  equals(d.valueOf(), parsed.valueOf(), "Negative GMT offset");
+  equals(parsed.valueOf(), d.valueOf(), "Negative GMT offset");
 
   parsed = jdate.strptime("2011-04-21T03:42:57-05:00", format)
-  equals(d.valueOf(), parsed.valueOf(), "Alternate timezone format");
+  equals(parsed.valueOf(), d.valueOf(), "Alternate timezone format");
 
   parsed = jdate.strptime("2011-04-21T08:42:57Z", format)
-  equals(d.valueOf(), parsed.valueOf(), "Z for timezone");
+  equals(parsed.valueOf(), d.valueOf(), "Z for timezone");
 });
 
 test("2 digit year parsing", function() {
@@ -171,12 +171,12 @@ test("Extension to base classes", function() {
   var format = "%Y-%m-%dT%H:%M:%S"
   var d = new Date(2011, 3, 21, 1, 42, 57);
 
-  equals("function", typeof Date.strptime, "Date.strptime exists");
+  equals(typeof Date.strptime, "function", "Date.strptime exists");
 
   var parsed = Date.strptime(s, format);
-  equals(d.valueOf(), parsed.valueOf(), "Parsing from Date class");
+  equals(parsed.valueOf(), d.valueOf(), "Parsing from Date class");
 
-  equals("function", typeof d.strftime, "Date#format exists");
+  equals(typeof d.strftime, "function", "Date#format exists");
 
-  equals(s, d.strftime(format), "Formatting from a Date instance");
+  equals(d.strftime(format), s, "Formatting from a Date instance");
 });
