@@ -86,10 +86,9 @@ var jdate = {};
       return suffixes[index] || suffixes['default'];
     },
 
-
     applyOffset: function(date, offset_seconds) {
-      date.offset = offset_seconds * 1000 ;
-      date.setTime(date.valueOf() + date.offset);
+      date.offset = offset_seconds * 1000;
+      date.setTime(date.valueOf() - date.offset);
       return date;
     },
 
@@ -117,7 +116,8 @@ var jdate = {};
 
       return result;
     }
-  }
+  };
+
 
   var format_codes = {
     a: function(d) { return dayNamesShort[d.getDay()]; },
@@ -177,7 +177,7 @@ var jdate = {};
     },
     B: {
       r: "(" + monthNames.join("|") + ")",
-      p: function(data) { this.month = monthNames.indexOf(data); }
+      p: function(data) { this.month = $.inArray(data, monthNames); }
     },
     C: { r: "(\\d{1,2})", p: function(d) { this.century = parseInt(d, 10)} },
     d: { r: "(\\d{1,2})", p: function(d) { this.day = parseInt(d, 10); } },
@@ -245,29 +245,71 @@ var jdate = {};
 
 
   jdate.strftime = function(d, format) {
-    var pairs = format.split(/(%.)/);
-    for (var i = 1; i < pairs.length; i += 2) {
-      var ch = pairs[i].charAt(1);
+    // I used to use string split with a regex and a capturing block here,
+    // which I thought was really clever, but apparently this exact feature is
+    // fucked in IE. In every other browser (and languages), the captured
+    // blocks are present in the output. E.g.
+    // var pairs = "hello%athere".split(/(%.)/);
+    // => ['hello', '%a', 'there']
+    // IE however, just treats it the same as if no capturing block is present
+    // => ['hello', 'there']
+    // An alternate implementation of split is available here
+    // http://blog.stevenlevithan.com/archives/cross-browser-split
+    // Because that's a large amount of code for this one specific use case,
+    // I've just decided to loop through a regex instead.
+
+    var output = '';
+    var remaining = format;
+
+    while (true) {
+      var r = /%./g;
+      var results = r.exec(remaining);
+
+      // No more format codes. Add the remaining text and return
+      if (!results) { return output + remaining };
+
+      // Add the preceding text
+      output += remaining.slice(0, r.lastIndex - 2);
+      remaining = remaining.slice(r.lastIndex)
+
+      // Add the format code
+      var ch = results[0].charAt(1);
       var func = format_codes[ch];
-      if (func) pairs[i] = func.call(this, d);
+      if (func) {
+        output += func.call(this, d);
+      } else {
+        // Print the literals if there is no formatting code
+        output += '%' + ch;
+      }
     }
-    return pairs.join('');
   };
 
   jdate.strptime = function(input, format) {
-    var pairs = format.split(/(%.)/);
     var parsers = [];
+    var regex = '';
+    var remaining = format;
 
-    // Build the regex
-    for (var i = 1; i < pairs.length; i += 2) {
-      var ch = pairs[i].charAt(1);
+    // Damn you IE. This code was so much more readable before.
+    while (true) {
+      var r = /%./g;
+      var results = r.exec(remaining);
+
+      if (!results) {
+        regex += remaining;
+        break;
+      };
+
+      regex += remaining.slice(0, r.lastIndex - 2);
+      remaining = remaining.slice(r.lastIndex)
+
+      var ch = results[0].charAt(1);
       var obj = parse_codes[ch];
       if (obj.p) { parsers = parsers.concat(obj.p); }
-      pairs[i] = obj.r;
+      regex += obj.r;
     }
 
     // Run the regex against the input
-    var regex = new RegExp("^" + pairs.join('') + "$");
+    var regex = new RegExp("^" + regex + "$");
     var match = input.match(regex) || [];
 
     // Check that the input matched the format
@@ -323,7 +365,6 @@ var jdate = {};
       date_obj.milliseconds || 0
     );
 
-    return parsed;
-    // return this._date.applyOffset(parsed, date_obj.zone || 0);
+    return _date.applyOffset(parsed, date_obj.zone || 0);
   };
 })(jdate);

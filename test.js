@@ -108,7 +108,7 @@ test("Standard date parsing", function() {
   parsed = jdate.strptime("112, 2012, 1:42:57", "%j, %Y, %H:%M:%S");
   equals(parsed.valueOf(), leap.valueOf(), "Parsing day number in leap year");
 
-  parsed = jdate.strptime("2011-04-21T01:42:57+1200", "%Y-%m-%dT%H:%M:%S%z");
+  parsed = jdate.strptime("2011-04-21T13:42:57+1200", "%Y-%m-%dT%H:%M:%S%z");
   equals(parsed.valueOf(), d.valueOf(), "Parsing timezone");
 
   var early = new Date(1922, 3, 21);
@@ -120,15 +120,6 @@ test("Parse bugs", function() {
   var d = new Date(2000, 0, 1);
   var parsed = jdate.strptime("2000-01-01", "%Y-%m-%d");
   equals(parsed.valueOf(), d.valueOf(), "Check zero year / month aren't skipped");
-});
-
-test("Timezones", function() {
-  var d = new Date(2011, 3, 21, 1, 42, 57);
-  d = new Date(d + d.getTimezoneOffset());
-  var s = "2011-04-21T01:42:57+0000"
-  var format = "%Y-%m-%dT%H:%M:%S%z"
-  var parsed = jdate.strptime(s, format);
-  equals(d.valueOf(), parsed.valueOf(), "Offset converted to local");
 });
 
 test("2 digit year parsing", function() {
