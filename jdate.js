@@ -87,8 +87,7 @@ var jdate = {};
     },
 
     applyOffset: function(date, offset_seconds) {
-      date.offset = offset_seconds * 1000;
-      date.setTime(date.valueOf() - date.offset);
+      date.setTime(date.valueOf() - offset_seconds * 1000);
       return date;
     },
 
@@ -364,7 +363,13 @@ var jdate = {};
       date_obj.second || 0,
       date_obj.milliseconds || 0
     );
+    if (!('zone' in date_obj)) { return parsed; }
 
+    // I hate timezones. My brain hurts.
+    // Usually we assume we're in the local zone. If there is a zone specified,
+    // we have to undo that assumption
+    parsed = new Date(parsed.valueOf() - parsed.getTimezoneOffset() * 1000 * 60);
+    // Then we have to adjust the zone back to the parsed zone
     return _date.applyOffset(parsed, date_obj.zone || 0);
   };
 })(jdate);

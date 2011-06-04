@@ -108,9 +108,6 @@ test("Standard date parsing", function() {
   parsed = jdate.strptime("112, 2012, 1:42:57", "%j, %Y, %H:%M:%S");
   equals(parsed.valueOf(), leap.valueOf(), "Parsing day number in leap year");
 
-  parsed = jdate.strptime("2011-04-21T13:42:57+1200", "%Y-%m-%dT%H:%M:%S%z");
-  equals(parsed.valueOf(), d.valueOf(), "Parsing timezone");
-
   var early = new Date(1922, 3, 21);
   parsed = jdate.strptime("21st Apr 1922", "%d%q %b %Y")
   equals(parsed.valueOf(), early.valueOf(), "Pre-epoch parsing");
@@ -120,6 +117,28 @@ test("Parse bugs", function() {
   var d = new Date(2000, 0, 1);
   var parsed = jdate.strptime("2000-01-01", "%Y-%m-%d");
   equals(parsed.valueOf(), d.valueOf(), "Check zero year / month aren't skipped");
+});
+
+// TODO: make this not assume -0700
+test("Timezones", function() {
+  var d = new Date(2011, 3, 21, 1, 42, 57);
+  var format = "%Y-%m-%dT%H:%M:%S%z"
+  var parsed;
+
+  parsed = jdate.strptime("2011-04-21T08:42:57+0000", format)
+  equals(d.valueOf(), parsed.valueOf(), "Zero GMT offset");
+
+  parsed = jdate.strptime("2011-04-21T14:42:57+0600", format)
+  equals(d.valueOf(), parsed.valueOf(), "Positive GMT offset");
+
+  parsed = jdate.strptime("2011-04-20T20:42:57-1200", format)
+  equals(d.valueOf(), parsed.valueOf(), "Negative GMT offset");
+
+  parsed = jdate.strptime("2011-04-21T03:42:57-05:00", format)
+  equals(d.valueOf(), parsed.valueOf(), "Alternate timezone format");
+
+  parsed = jdate.strptime("2011-04-21T08:42:57Z", format)
+  equals(d.valueOf(), parsed.valueOf(), "Z for timezone");
 });
 
 test("2 digit year parsing", function() {
