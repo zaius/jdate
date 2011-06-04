@@ -161,7 +161,6 @@ var jdate = {};
   format_codes.N = format_codes.L;
 
 
-  // TODO: handle invalid parse codes better
   // * r stands for regex, p stands for parser
   // * all parseInt calls have to have the base supplied as the second
   //   parameter, otherwise they will default to octal when parsing numbers
@@ -303,6 +302,9 @@ var jdate = {};
 
       var ch = results[0].charAt(1);
       var obj = parse_codes[ch];
+
+      // Catch invalid parse codes
+      if (!obj) return null;
       if (obj.p) { parsers = parsers.concat(obj.p); }
       regex += obj.r;
     }

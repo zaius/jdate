@@ -111,6 +111,9 @@ test("Standard date parsing", function() {
   var early = new Date(1922, 3, 21);
   parsed = jdate.strptime("21st Apr 1922", "%d%q %b %Y")
   equals(parsed.valueOf(), early.valueOf(), "Pre-epoch parsing");
+
+  parsed = jdate.strptime("fake", "%i")
+  equals(parsed, null, "Don't crash on invalid parse code");
 });
 
 test("Parse bugs", function() {
